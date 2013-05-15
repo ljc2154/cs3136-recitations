@@ -99,18 +99,16 @@ void merge(T a1[], int n1, T a2[], int n2, T output[])
 ```
 
 ### Some things to remember with templates ###
-```
-  -Always need "template <typename T>" before function declaration/definition.
-  -The function will only work with classes and types for which all functions/operators used in the function are defined.
-```
+
+  * Always need "template <typename T>" before function declaration/definition.
+  * The function will only work with classes and types for which all functions/operators used in the function are defined.
 
 ### Difference between templates and void * ###
-```
-  Templates enable generic programming for all types while void * enables a typless programming.
-  With templates, the programming is type-safe, so the compiler will catch type mismatches (things to remember #2).
-  With void *, the programming is not type-safe, so seg-faults catch type mismatches :(.
-  Templates enable value semantics, but with void * you are forced to use pointer semantics.
-```
+
+  * Templates enable generic programming for all types while void * enables a typless programming.
+  * With templates, the programming is type-safe, so the compiler will catch type mismatches (things to remember #2).
+  * With void *, the programming is not type-safe, so seg-faults catch type mismatches :(.
+  * Templates enable value semantics, but with void * you are forced to use pointer semantics.
 
 ### STL Containers ###
 The C++ Standard Template Library comes with built-in classes that contain data defined by templates.
@@ -121,52 +119,75 @@ There are 3 different types of containers: sequence containers, container adapte
 
 We will focus on the 3 sequence containers: vector, deque, and list.
 
-Good thing about these container fellas: they "contain" objects of type T "by value".  Don't have to do too much garbage collecting.  Elements of container are destroyed when container is destroyed.
+Good thing about these container fellas: they "contain" objects of type T "by value".  Don't have to do too much garbage collecting.  Elements of container are destroyed when container is destroyed. (so you can just delete the container and don't have to iterate through to delete all the elements).
 
 ### vector ###
-```
-  -an array
-  -Provides efficient random access (operator[]) and adding/removing elements from the end of the vector (push_back()/pop_back()).
-  -Supports item additions & removals at positions other than the end
-    of the vector (insert()/remove()), but they are inefficient
-    because other items need to be moved.
-```
+  * an array
+  * Provides efficient random access (operator[]) and adding/removing elements from the end of the vector (push_back()/pop_back()).
+  * Supports item additions & removals at positions other than the end of the vector (insert()/remove()), but they are inefficient because other items need to be moved.
+
+  Here an example of using a vector
+  ```c
+  #include <vector>
+  #include <string>
+  #include <iostream>
+  using namespace std;
+
+  int main(int argc, char **argv) {
+
+    vector<string> str_vector;
+    str_vector.push_back("hello");
+    str_vector.insert(str_vector.begin(), "world");
+
+    // print out contents now
+    for (unsigned i = 0; i < str_vector.size(); i++) {
+      cout << str_vector[i] << endl;
+    }
+
+    return 0;
+  }
+  ```
+
 ### deque ###
-```
-  - short for double-ended queue, pronounced "deck"
-  - similar to vector, but unlike vector, deque supports efficient
+  * short for double-ended queue, pronounced "deck"
+  * similar to vector, but unlike vector, deque supports efficient
     addition & removal of elements from the beginning of the deque
     (push_front()/pop_front()).
-  - slower and/or wastes more memory than vector
-```
+  * slower and/or wastes more memory than vector
+
 ### list ###
-```
-  - doubly linked list
-  - efficient insertion & removal of elements anywhere in the list
-  - no random access
-```
+  * doubly linked list
+  * efficient insertion & removal of elements anywhere in the list
+  * no random access
 
 ### Iterators ###
   The sequential containers have iterators to keep track of elements.
-```
-  - "iterator" and "const_iterator" is a "type member" (i.e., a
+  * "iterator" and "const_iterator" is a "type member" (i.e., a
     typedef defined inside a class)
-  - An iterator behaves like a pointer: ++it, *it.  Sometimes it’s
+  * An iterator behaves like a pointer: ++it, *it.  Sometimes it’s
     actully a pointer (vector<T>::iterator is just a typedef of T*),
     but more often it’s not.  (Think about what a list<T>::iterator
     would have to do when you increment it.)
-  - Dereferencing an iterator gives you a T&, and dereferencing a
+  * Dereferencing an iterator gives you a T&, and dereferencing a
     const_iterator gives you a const T&.
-  - v.begin() returns an iterator that points to the first element in
+  * v.begin() returns an iterator that points to the first element in
     the vector.
-  - v.end() returns an iterator that points to ONE PAST THE LAST
+  * v.end() returns an iterator that points to ONE PAST THE LAST
     ELEMENT, not the last element.  It is used as a marker for the end
     of the container, and it cannot be dereferenced.
-  - Note that we use "!=" rather than "<" in the for loop.  This is
+  * Note that we use "!=" rather than "<" in the for loop.  This is
     recommended (especially if you’re writing template code) because
     not all iterators define operator<().  (list iterator does not,
     for example.)
-  - Note that we use ++it rather than it++.  This is recommended
+  * Note that we use ++it rather than it++.  This is recommended
     because when the iterator is a class object rather than a native
     pointer, it’s usually less costly to call ++it than it++.
-```
+
+    Below is some sample code on using an iterator to print the contents of a vector<string> v.
+
+    ```c
+    typename vector<string>::const_iterator it;
+    for (it = v.begin(); it != v.end(); it++) {
+      cout << *it << " ";
+    }
+    ```
